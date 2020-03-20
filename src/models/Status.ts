@@ -1,12 +1,12 @@
-import mongoose from 'mongoose'
+import {Schema,model} from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 
-const statusSchema = mongoose.createSchema({
+const statusSchema = new Schema({
     status_text: { type: String },
     created_at: { type: Date },
     status_picture_url: { type: String },
     status_tags: [{ type: String }],
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
     favorites_count: { type: Number },
 })
 
@@ -19,5 +19,5 @@ statusSchema.set('toJSON', {
     }
 })
 statusSchema.plugin(uniqueValidator)
-const Item = mongoose.model('Status', statusSchema)
+const Item = model('Status', statusSchema)
 module.exports = Item

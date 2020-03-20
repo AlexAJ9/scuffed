@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/mongoose": "^5.7.7",
+    "dotenv": "^8.2.0",
     "graphql-yoga": "1.18.3",
     "mongoose": "^5.9.5",
     "mongoose-unique-validator": "^2.0.3"

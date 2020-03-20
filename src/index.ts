@@ -1,4 +1,14 @@
 import { GraphQLServer } from 'graphql-yoga'
+import {connect} from 'mongoose'
+ require('dotenv').config()
+
+connect(process.env.MONGO_URI, { useUnifiedTopology: true, useNewUrlParser: true })
+    .then(() => {
+        console.log('Connected to DB!')
+    })
+    .catch(err => {
+        console.log('error connecting to DB', err.message)
+    })
 
 const typeDefs = `
   type Query {

@@ -1,5 +1,5 @@
 import {Schema,model} from 'mongoose'
-import uniqueValidator from 'mongoose-unique-validator'
+import * as uniqueValidator from 'mongoose-unique-validator'
 
 const statusSchema = new Schema({
     status_text: { type: String },
@@ -19,5 +19,6 @@ statusSchema.set('toJSON', {
     }
 })
 statusSchema.plugin(uniqueValidator)
-const Item = model('Status', statusSchema)
-module.exports = Item
+const Status = model('Status', statusSchema)
+
+export default Status

@@ -8,6 +8,8 @@ const statusSchema = new Schema({
     status_tags: [{ type: String }],
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     favorites_count: { type: Number },
+    comments: [{ type: String }],
+    stars:{type:Number}
 })
 
 statusSchema.set('toJSON', {

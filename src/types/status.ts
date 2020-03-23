@@ -5,12 +5,15 @@ const { gql } = require('apollo-server')
 export const typeDefs = gql`
 
  type Status {
+     id:String!,
     status_text: String!,
     created_at: String!,
     status_picture_url: String,
     status_tags: [String!]!,
     user: String!,
     favorites_count: Int!,
+    comments:[String!]!,
+    stars:Int
 }
 
 type Query {
@@ -22,7 +25,8 @@ type Mutation {
     addStatus(
         status_text:String!,
         status_tags:[String!]!,
-        user: String!
+        user: String!,
+        stars:Int
         ):Status,
     editStatus(
         id:String!,
@@ -30,8 +34,15 @@ type Mutation {
         status_tags: [String!]!,
         status_picture_url: String
         ):Status,
+        starStatus(
+            id:String!,
+        ):Status
     favouriteStatus(
         favourites_count:Int!,
+    ):Status,
+    comment(
+        id:String!,
+        comment: String!
     ):Status
 }
 
@@ -55,6 +66,16 @@ export const resolvers = {
             }
             const updatedStatus = await Status.findByIdAndUpdate(args.id,statusObj, { new: true })
             return updatedStatus
+        },
+        starStatus: async (root, args) => { 
+            const stars = await (await Status.findById(args.id)).toObject().stars            
+            const updatedStatus = await Status.findByIdAndUpdate(args.id, { stars: stars + 1 }, { new: true })
+            return updatedStatus
+        },
+        comment: async (root, args) => { 
+            const statusToUpdate = await (await Status.findById(args.id)).toObject()
+            const status = await Status.findByIdAndUpdate(args.id, { comments:statusToUpdate.comments.concat(args.comment) }, { new: true })
+            return status
         }
     }
     

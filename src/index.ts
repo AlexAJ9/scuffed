@@ -1,10 +1,13 @@
-import {connect} from 'mongoose'
-import { GraphQLServer } from 'graphql-yoga'
+import {merge} from 'lodash'
+import { connect } from 'mongoose'
+const {  ApolloServer } = require('apollo-server')
 
 require('dotenv').config()
 
+import { typeDefs as Status } from './modules/status/types'
+import { queries as statusQueries } from './modules/status/statusQueries'
+import {  mutations as statusMutations} from './modules/status/statusMutations'
 
-import { typeDefs as Status, resolvers as statusResolvers } from './types/status'
 
 connect(process.env.MONGO_URI, { useUnifiedTopology: true, useNewUrlParser: true })
     .then(() => {
@@ -15,9 +18,12 @@ connect(process.env.MONGO_URI, { useUnifiedTopology: true, useNewUrlParser: true
     })
 
 
-const server = new GraphQLServer({
+const server = new ApolloServer({
   typeDefs:Status,
-  resolvers:statusResolvers
+  resolvers:merge(statusQueries,statusMutations)
 })
 
-server.start(() => console.log('Server is running on http://localhost:4000'))
+const port = process.env.PORT
+
+
+server.listen(port,() => console.log(`🚀Server is running on ${port}`))

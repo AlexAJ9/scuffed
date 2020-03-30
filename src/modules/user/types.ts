@@ -4,7 +4,7 @@ export const User = gql`
   type User {
     id: String!
     passwordHash: String!
-    screen_name: String!
+    username: String!
     description: String!
     profile_image_url: String!
     statuses: [Status!]!
@@ -15,10 +15,13 @@ export const User = gql`
   }
 
   type Query {
+    allUsers: [Users!]!
     usersCount: Int!
     getUserInfo: User!
   }
-
+  type Token {
+    value: String!
+  }
   type Mutation {
     addUser(name: String!, passwordHash: String!): User
     editUser(
@@ -29,5 +32,6 @@ export const User = gql`
       profile_image_url: String!
     ): User
     friendUser(id: String!): User
+    Login(username: String!, passwordHash: String!): Token
   }
 `;

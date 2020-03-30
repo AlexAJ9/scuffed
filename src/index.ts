@@ -4,8 +4,10 @@ const { ApolloServer } = require("apollo-server");
 
 require("dotenv").config();
 
-import { Status } from "./modules/status/types";
 import { User } from "./modules/user/types";
+import { queries as userQueries } from "./modules/status/statusQueries";
+import { mutations as userMutations } from "./modules/user/userMutations";
+import { Status } from "./modules/status/types";
 import { queries as statusQueries } from "./modules/status/statusQueries";
 import { mutations as statusMutations } from "./modules/status/statusMutations";
 
@@ -22,7 +24,7 @@ connect(process.env.MONGO_URI, {
 
 const server = new ApolloServer({
   typeDefs: [Status, User],
-  resolvers: merge(statusQueries, statusMutations)
+  resolvers: merge(statusQueries, statusMutations, userQueries, userMutations)
 });
 
 const port = process.env.PORT;

@@ -6,17 +6,23 @@ const { UserInputError } = require("apollo-server");
 export const mutations = {
   Mutation: {
     addUser: async (root, args) => {
-      const saltRounds = 10;
-      const passwordHash = await bcrypt.hash(args.password, saltRounds);
-      const newUser = new User({ ...args, passwordHash: passwordHash });
       try {
+        console.log("beh");
+        const saltRounds = 10;
+        const passwordHash = await bcrypt.hash(args.password, saltRounds);
+        console.log(passwordHash);
+        const newUser = new User({
+          username: args.username,
+          passwordHash: passwordHash
+        });
+        console.log(newUser);
         await newUser.save();
+        return newUser;
       } catch (err) {
         throw new UserInputError(err.message, {
           invalidArgs: args
         });
       }
-      return newUser;
     },
     editUser: async (root, args) => {
       const usetToEdit = await User.findByIdAndUpdate(
@@ -42,6 +48,12 @@ export const mutations = {
         user === null
           ? false
           : await bcrypt.compare(args.password, user.passwordHash);
+      const userToken = {
+        id: user._id,
+        username: args.username
+      };
+      const token = jwt.sign(userToken, process.env.Secret);
+      return token;
     }
   }
 };

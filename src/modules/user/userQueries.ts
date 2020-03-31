@@ -9,7 +9,7 @@ export const queries = {
       return User.find({});
     },
     getUserInfo: async (root, args) => {
-      return User.findById({ id: args.id });
+      return User.findById(args.id);
     }
   }
 };

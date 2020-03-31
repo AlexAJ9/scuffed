@@ -1,6 +1,7 @@
 import { merge } from "lodash";
 import { connect } from "mongoose";
-const { ApolloServer } = require("apollo-server");
+
+const { ApolloServer, gql } = require("apollo-server");
 
 require("dotenv").config();
 
@@ -22,9 +23,19 @@ connect(process.env.MONGO_URI, {
     console.log("error connecting to DB", err.message);
   });
 
+const Query = gql`
+  type Query {
+    _empty: String
+  }
+`;
+const Mutation = gql`
+  type Mutation {
+    _empty: String
+  }
+`;
 const server = new ApolloServer({
-  typeDefs: [Status, User],
-  resolvers: merge(statusQueries, statusMutations, userQueries, userMutations)
+  typeDefs: [Query, Mutation, Status, User],
+  resolvers: merge(statusQueries, statusMutations)
 });
 
 const port = process.env.PORT;

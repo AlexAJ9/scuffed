@@ -1,5 +1,5 @@
 import { Schema, model, Document } from "mongoose";
-import uniqueValidator from "mongoose-unique-validator";
+import * as uniqueValidator from "mongoose-unique-validator";
 
 interface User extends Document {
   name: string;
@@ -8,10 +8,10 @@ interface User extends Document {
   description: string;
   profile_image_url: string;
   created_at: string;
-  statuses: [];
+  statuses: string[];
   statues_count: number;
-  friends: [];
-  favorites: [];
+  friends: string[];
+  favorites: string[];
   favorites_count: number;
 }
 

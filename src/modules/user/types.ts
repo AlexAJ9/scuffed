@@ -9,20 +9,20 @@ export const User = gql`
     profile_image_url: String!
     statuses: [Status!]!
     statuses_count: Int
-    friend: [Users!]!
+    friend: [User!]!
     favorites: [Status!]!
     favorites_count: Int
   }
 
-  type Query {
-    allUsers: [Users!]!
+  extend type Query {
+    allUsers: [User!]!
     usersCount: Int!
     getUserInfo: User!
   }
   type Token {
     value: String!
   }
-  type Mutation {
+  extend type Mutation {
     addUser(name: String!, passwordHash: String!): User
     editUser(
       id: String!

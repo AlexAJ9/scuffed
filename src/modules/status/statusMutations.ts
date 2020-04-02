@@ -1,5 +1,5 @@
 import Status from "../../models/Status";
-const { UserInputError } = require("apollo-server");
+const { UserInputError, AuthenticationError } = require("apollo-server");
 
 export const mutations = {
   Mutation: {
@@ -14,7 +14,10 @@ export const mutations = {
       }
       return newStatus;
     },
-    editStatus: async (root, args) => {
+    editStatus: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new AuthenticationError("wrong password or usernmae");
+      }
       try {
         const statusObj = {
           status_text: args.status_text,

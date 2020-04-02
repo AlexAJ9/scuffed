@@ -1,11 +1,12 @@
 import { merge } from "lodash";
 import { connect } from "mongoose";
+import User from "./models/User";
 const jwt = require("jsonwebtoken");
 const { ApolloServer, gql, context } = require("apollo-server");
 
 require("dotenv").config();
 
-import { User } from "./modules/user/types";
+import { User as UserType } from "./modules/user/types";
 import { queries as userQueries } from "./modules/user/userQueries";
 import { mutations as userMutations } from "./modules/user/userMutations";
 import { Status } from "./modules/status/types";
@@ -34,7 +35,7 @@ const Mutation = gql`
   }
 `;
 const server = new ApolloServer({
-  typeDefs: [Query, Mutation, Status, User],
+  typeDefs: [Query, Mutation, Status, UserType],
   resolvers: merge(statusQueries, statusMutations, userQueries, userMutations),
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null;

@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 import User from "../../models/User";
-const { UserInputError } = require("apollo-server");
+const { UserInputError, AuthenticationError } = require("apollo-server");
 
 export const mutations = {
   Mutation: {
@@ -24,15 +24,21 @@ export const mutations = {
         });
       }
     },
-    editUser: async (root, args) => {
-      const usetToEdit = await User.findByIdAndUpdate(
-        { ...args },
-        { new: true }
-      );
+    editUser: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        console.log("beh");
+        throw new AuthenticationError("bitch");
+      }
+      const userObj = {
+        username: args.username,
+        description: args.description
+      };
+      const usetToEdit = await User.findByIdAndUpdate(args.id, userObj, {
+        new: true
+      });
       return usetToEdit;
     },
     friendUser: async (root, args) => {
-      const user = await User.findById(args.id);
       const userToEdit = await User.findByIdAndUpdate(
         args.id,
         {
@@ -41,19 +47,6 @@ export const mutations = {
         { new: true }
       );
       return userToEdit;
-    },
-    login: async (root, args) => {
-      const user = await User.findOne({ username: args.username });
-      const passCorrect =
-        user === null
-          ? false
-          : await bcrypt.compare(args.password, user.passwordHash);
-      const userToken = {
-        id: user._id,
-        username: args.username
-      };
-      const token = jwt.sign(userToken, process.env.Secret);
-      return token;
     }
   }
 };

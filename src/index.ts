@@ -12,6 +12,9 @@ import { mutations as userMutations } from "./modules/user/userMutations";
 import { Status } from "./modules/status/types";
 import { queries as statusQueries } from "./modules/status/statusQueries";
 import { mutations as statusMutations } from "./modules/status/statusMutations";
+import { Message as MessageType } from "./modules/message/types";
+import { queries as messageQueries } from "./modules/message/messageQueries";
+import { mutations as messageMutations } from "./modules/message/messageMutations";
 
 connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
@@ -35,8 +38,15 @@ const Mutation = gql`
   }
 `;
 const server = new ApolloServer({
-  typeDefs: [Query, Mutation, Status, UserType],
-  resolvers: merge(statusQueries, statusMutations, userQueries, userMutations),
+  typeDefs: [Query, Mutation, Status, UserType, MessageType],
+  resolvers: merge(
+    statusQueries,
+    statusMutations,
+    userQueries,
+    userMutations,
+    messageQueries,
+    messageMutations
+  ),
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null;
     if (auth && auth.toLowerCase().startsWith("bearer ")) {

@@ -2,8 +2,9 @@ import { merge } from "lodash";
 import { connect } from "mongoose";
 import User from "./models/User";
 const jwt = require("jsonwebtoken");
-const { ApolloServer, gql, context } = require("apollo-server");
+const { ApolloServer, gql, context, PubSub } = require("apollo-server");
 
+const pubsub = new PubSub();
 require("dotenv").config();
 
 import { User as UserType } from "./modules/user/types";
@@ -54,8 +55,9 @@ const server = new ApolloServer({
       const currentUser = await User.findById(decodedToken.id).populate(
         "friends"
       );
-      return { currentUser };
+      return { currentUser, pubsub };
     }
+    return { pubsub };
   }
 });
 

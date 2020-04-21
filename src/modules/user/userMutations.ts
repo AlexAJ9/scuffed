@@ -13,14 +13,14 @@ export const mutations = {
         console.log(passwordHash);
         const newUser = new User({
           username: args.username,
-          passwordHash: passwordHash
+          passwordHash: passwordHash,
         });
         console.log(newUser);
         await newUser.save();
         return newUser;
       } catch (err) {
         throw new UserInputError(err.message, {
-          invalidArgs: args
+          invalidArgs: args,
         });
       }
     },
@@ -31,10 +31,10 @@ export const mutations = {
       }
       const userObj = {
         username: args.username,
-        description: args.description
+        description: args.description,
       };
       const usetToEdit = await User.findByIdAndUpdate(args.id, userObj, {
-        new: true
+        new: true,
       });
       return usetToEdit;
     },
@@ -42,11 +42,28 @@ export const mutations = {
       const userToEdit = await User.findByIdAndUpdate(
         args.id,
         {
-          friends: args.friends.concat(args.friendId)
+          friends: args.friends.concat(args.friendId),
         },
         { new: true }
       );
       return userToEdit;
-    }
-  }
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username });
+      const passCorrect =
+        user === null
+          ? false
+          : await bcrypt.compare(args.password, user.passwordHash);
+      if (!passCorrect) {
+        console.log("he");
+        throw new UserInputError({ message: "Wrong password buddeh?" });
+      }
+      const userToken = {
+        id: user._id,
+        username: args.username,
+      };
+      const token = await jwt.sign(userToken, process.env.Secret);
+      return { value: token };
+    },
+  },
 };

@@ -18,12 +18,12 @@ export const User = gql`
     allUsers: [User!]
     usersCount: Int
     getUserInfo(id: String!): User!
-    login(username: String!, password: String!): Token
   }
   type Token {
     value: String!
   }
   extend type Mutation {
+    login(username: String!, password: String!): Token
     addUser(username: String!, password: String!): User
     editUser(id: String!, username: String, description: String): User
     friendUser(id: String!): User

@@ -21,8 +21,9 @@ export const Status = gql`
   extend type Mutation {
     addStatus(
       status_text: String!
-      status_tags: [String!]!
-      user: String!
+      status_picture_url: String
+      status_tags: [String!]
+      user: String
       stars: Int
     ): Status
     editStatus(

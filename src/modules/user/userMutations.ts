@@ -63,7 +63,7 @@ export const mutations = {
         username: args.username,
       };
       const token = await jwt.sign(userToken, process.env.Secret);
-      return { value: token };
+      return { token: token, user: user };
     },
   },
 };

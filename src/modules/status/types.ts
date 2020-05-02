@@ -8,6 +8,7 @@ export const Status = gql`
     status_picture_url: String
     status_tags: [String!]
     user: String!
+    username: String!
     comments: [String!]!
     stars: Int
   }
@@ -24,6 +25,7 @@ export const Status = gql`
       status_picture_url: String
       status_tags: [String!]
       user: String
+      username: String
       stars: Int
     ): Status
     editStatus(

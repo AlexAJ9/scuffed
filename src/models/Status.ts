@@ -6,7 +6,8 @@ interface Status extends Document {
   created_at: string;
   status_picture_url: string;
   status_tags: string[];
-  user: string;
+  userId: string;
+  username: string;
   favorites_count: number;
   comments: string;
   stars: number;
@@ -16,10 +17,11 @@ const statusSchema = new Schema({
   created_at: { type: Date },
   status_picture_url: { type: String },
   status_tags: [{ type: String }],
-  user: { type: Schema.Types.ObjectId, ref: "User" },
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  username: { type: String },
   favorites_count: { type: Number },
   comments: [{ type: String }],
-  stars: { type: Number, default: 0 }
+  stars: { type: Number, default: 0 },
 });
 
 statusSchema.plugin(uniqueValidator);

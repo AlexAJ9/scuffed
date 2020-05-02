@@ -7,7 +7,7 @@ export const User = gql`
     username: String!
     description: String
     profile_image_url: String
-    statuses: [Status!]
+    statuses: [String!]
     statuses_count: Int
     friend: [User!]
     favorites: [Status!]

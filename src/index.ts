@@ -19,12 +19,12 @@ import { mutations as messageMutations } from "./modules/message/messageMutation
 
 connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
-  useNewUrlParser: true
+  useNewUrlParser: true,
 })
   .then(() => {
     console.log("Connected to DB!");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log("error connecting to DB", err.message);
   });
 
@@ -58,7 +58,7 @@ const server = new ApolloServer({
       return { currentUser, pubsub };
     }
     return { pubsub };
-  }
+  },
 });
 
 const port = process.env.PORT;

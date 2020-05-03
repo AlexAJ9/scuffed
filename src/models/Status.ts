@@ -9,7 +9,7 @@ interface Status extends Document {
   userId: string;
   username: string;
   favorites_count: number;
-  comments: string;
+  comments: [{ text: string; user: string }];
   stars: number;
 }
 const statusSchema = new Schema({
@@ -20,7 +20,7 @@ const statusSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: "User" },
   username: { type: String },
   favorites_count: { type: Number },
-  comments: [{ type: String }],
+  comments: [{ text: String, user: String }],
   stars: { type: Number, default: 0 },
 });
 

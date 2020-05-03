@@ -9,10 +9,13 @@ export const Status = gql`
     status_tags: [String!]
     user: String!
     username: String!
-    comments: [String!]!
+    comments: [Comment!]
     stars: Int
   }
-
+  type Comment {
+    text: String!
+    user: String!
+  }
   extend type Query {
     statusCount: Int!
     allStatuses: [Status!]!
@@ -36,5 +39,6 @@ export const Status = gql`
     ): Status
     starStatus(id: String!): Status
     comment(id: String!, comment: String!): Status
+    deleteStatus(id: String): Status
   }
 `;

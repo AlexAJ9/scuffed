@@ -63,20 +63,33 @@ export const mutations = {
         });
       }
     },
-    comment: async (root, args) => {
+    comment: async (root, args, { currentUser }) => {
       try {
+        const comment = {
+          text: args.comment,
+          user: currentUser.username,
+        };
+        console.log(comment);
         const statusToUpdate = await Status.findById(args.id);
         const status = await Status.findByIdAndUpdate(
           args.id,
-          { comments: statusToUpdate.comments.concat(args.comment) },
+          { comments: statusToUpdate.comments.concat(comment) },
           { new: true }
         );
+
         return status;
       } catch (err) {
         throw new UserInputError(err, {
           invalidArgs: args,
         });
       }
+    },
+    deleteStatus: async (root, args, { currentUser }) => {
+      await Status.findByIdAndRemove(args.id);
+      currentUser.statuses = currentUser.statuses.filter(
+        (status) => status.id !== args.id
+      );
+      await currentUser.save();
     },
   },
 };

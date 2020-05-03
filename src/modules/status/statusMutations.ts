@@ -34,7 +34,6 @@ export const mutations = {
         const statusObj = {
           status_text: args.status_text,
           status_tags: args.status_tags,
-          status_picture_url: args.status_picture_url,
         };
         const updatedStatus = await Status.findByIdAndUpdate(
           args.id,

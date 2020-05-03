@@ -34,7 +34,7 @@ export const Status = gql`
     editStatus(
       id: String!
       status_text: String
-      status_tags: [String!]!
+      status_tags: [String!]
       status_picture_url: String
     ): Status
     starStatus(id: String!): Status

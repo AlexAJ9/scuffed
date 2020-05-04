@@ -31,6 +31,8 @@ export const mutations = {
       }
       const userObj = {
         username: args.username,
+        name: args.name,
+        profile_image_url: args.profile_image_url,
         description: args.description,
       };
       const usetToEdit = await User.findByIdAndUpdate(args.id, userObj, {

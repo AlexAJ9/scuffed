@@ -16,6 +16,7 @@ interface User extends Document {
 }
 
 const userSchema = new Schema({
+  name: { type: String, required: true, unique: true, minLength: 4 },
   username: { type: String, required: true, unique: true, minLength: 4 },
   passwordHash: { type: String, required: true },
   description: { type: String, minLength: 8 },

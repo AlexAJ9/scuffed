@@ -47,15 +47,32 @@ export const mutations = {
         });
       }
     },
-    starStatus: async (root, args) => {
+    starStatus: async (root, args, { currentUser }) => {
       try {
-        const stars = await (await Status.findById(args.id)).stars;
-        const updatedStatus = await Status.findByIdAndUpdate(
-          args.id,
-          { stars: stars + 1 },
-          { new: true }
-        );
-        return updatedStatus;
+        const statusToLike = await Status.findById(args.id);
+        if (currentUser.favorites.includes(statusToLike.id)) {
+          const updatedStatus = await Status.findByIdAndUpdate(
+            args.id,
+            { stars: statusToLike.stars - 1 },
+            { new: true }
+          );
+
+          currentUser.favorites = currentUser.favorites.filter((status) => {
+            status !== args.id;
+          });
+          console.log(currentUser.favorites);
+          await currentUser.save();
+          return updatedStatus;
+        } else {
+          const updatedStatus = await Status.findByIdAndUpdate(
+            args.id,
+            { stars: statusToLike.stars + 1 },
+            { new: true }
+          );
+          currentUser.favorites = currentUser.favorites.concat(args.id);
+          await currentUser.save();
+          return updatedStatus;
+        }
       } catch (err) {
         throw new UserInputError(err, {
           invalidArgs: args,

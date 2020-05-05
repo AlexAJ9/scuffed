@@ -11,7 +11,7 @@ export const User = gql`
     statuses: [String!]
     statuses_count: Int
     friend: [User!]
-    favorites: [Status!]
+    favorites: [String!]
     favorites_count: Int
   }
 

@@ -25,8 +25,8 @@ const userSchema = new Schema({
   statuses: [{ type: Schema.Types.ObjectId, ref: "Status" }],
   statues_count: { type: Number },
   friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  favorites: [{ type: Schema.Types.ObjectId, red: "Status" }],
-  favorites_count: { type: Number }
+  favorites: [{ type: Schema.Types.ObjectId, ref: "Status" }],
+  favorites_count: { type: Number },
 });
 
 userSchema.plugin(uniqueValidator);

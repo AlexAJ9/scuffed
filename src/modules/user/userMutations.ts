@@ -40,15 +40,22 @@ export const mutations = {
       });
       return usetToEdit;
     },
-    friendUser: async (root, args) => {
-      const userToEdit = await User.findByIdAndUpdate(
-        args.id,
-        {
-          friends: args.friends.concat(args.friendId),
-        },
-        { new: true }
-      );
-      return userToEdit;
+    friendUser: async (root, args, { currentUser }) => {
+      console.log(args.id);
+      if (currentUser.friends.includes(args.id)) {
+        currentUser.friends = currentUser.friends.filter((status) => {
+          status !== args.id;
+        });
+
+        console.log(currentUser.friends + "yes");
+        await currentUser.save();
+        return currentUser;
+      } else {
+        currentUser.friends = currentUser.friends.concat(args.id);
+        console.log(currentUser.friends + "no");
+        await currentUser.save();
+        return currentUser;
+      }
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username });

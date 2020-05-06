@@ -10,7 +10,7 @@ export const User = gql`
     profile_image_url: String
     statuses: [String!]
     statuses_count: Int
-    friend: [User!]
+    friends: [String!]
     favorites: [String!]
     favorites_count: Int
   }

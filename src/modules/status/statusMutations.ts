@@ -12,9 +12,10 @@ export const mutations = {
       console.log(currentUser);
       const newStatus = new Status({
         ...args,
-        user: currentUser._id,
+        userId: currentUser._id,
         username: currentUser.username,
       });
+      console.log(newStatus.toString());
       try {
         const savedStatus = await newStatus.save();
         currentUser.statuses = currentUser.statuses.concat(savedStatus.id);

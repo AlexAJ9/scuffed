@@ -11,6 +11,7 @@ import { User as UserType } from "./modules/user/types";
 import { queries as userQueries } from "./modules/user/userQueries";
 import { mutations as userMutations } from "./modules/user/userMutations";
 import { Status } from "./modules/status/types";
+import { subscriptions as statusSubscriptions } from "./modules/status/statusSubscriptions";
 import { queries as statusQueries } from "./modules/status/statusQueries";
 import { mutations as statusMutations } from "./modules/status/statusMutations";
 import { Message as MessageType } from "./modules/message/types";
@@ -38,11 +39,17 @@ const Mutation = gql`
     _empty: String
   }
 `;
+const Subscription = gql`
+  type Subscription {
+    _empty: String
+  }
+`;
 const server = new ApolloServer({
-  typeDefs: [Query, Mutation, Status, UserType, MessageType],
+  typeDefs: [Query, Mutation, Subscription, Status, UserType, MessageType],
   resolvers: merge(
     statusQueries,
     statusMutations,
+    statusSubscriptions,
     userQueries,
     userMutations,
     messageQueries,
@@ -61,4 +68,7 @@ const server = new ApolloServer({
 
 const port = process.env.PORT;
 
-server.listen(port, () => console.log(`🚀Server is running on ${port}`));
+server.listen().then(({ url, subscriptionsUrl }) => {
+  console.log(`Server ready at ${url}`);
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`);
+});

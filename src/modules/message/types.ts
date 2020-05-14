@@ -25,11 +25,4 @@ export const Message = gql`
     updateMessage(id: ID!, message: String!): Message!
     deleteMessage(id: String!): Boolean!
   }
-
-  type Subscription {
-    newMessage(receiverUsername: String!): Message!
-    creatingMessage(receiverUsername: String!): String!
-    newUser: User!
-    oldUser: String!
-  }
 `;

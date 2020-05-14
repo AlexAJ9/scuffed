@@ -1,5 +1,10 @@
 import Status from "../../models/Status";
-const { UserInputError, AuthenticationError } = require("apollo-server");
+const {
+  UserInputError,
+  AuthenticationError,
+  PubSub,
+} = require("apollo-server");
+const pubsub = new PubSub();
 
 export const mutations = {
   Mutation: {
@@ -18,6 +23,7 @@ export const mutations = {
       console.log(newStatus.toString());
       try {
         const savedStatus = await newStatus.save();
+        pubsub.publish("STATUS_ADDED", { statusAdded: savedStatus });
         currentUser.statuses = currentUser.statuses.concat(savedStatus.id);
         await currentUser.save();
       } catch (err) {

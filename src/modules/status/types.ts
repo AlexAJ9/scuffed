@@ -39,4 +39,7 @@ export const Status = gql`
     comment(id: String!, comment: String!): Status
     deleteStatus(id: String): Status
   }
+  extend type Subscription {
+    addStatus: Status!
+  }
 `;

@@ -10,7 +10,7 @@ export const Status = gql`
     userId: String!
     username: String!
     comments: [Comment!]
-    stars: Int
+    likes: Int
   }
   type Comment {
     text: String!
@@ -36,14 +36,14 @@ export const Status = gql`
       status_picture_url: String
     ): Status
     likeStatus(id: String!): Status
-    comment(id: String!, comment: String!): Status
+    addComment(id: String!, comment: String!): Status
     deleteStatus(id: String): Status
   }
   extend type Subscription {
-    addStatus: Status!
+    newStatus: Status
     editStatus: Status!
     deleteStatus: Status!
     likeStatus: Status!
-    comment: Status!
+    addComment: Status!
   }
 `;

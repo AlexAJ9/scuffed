@@ -9,7 +9,7 @@ interface Status extends Document {
   userId: string;
   username: string;
   favorites_count: number;
-  comments: [{ text: string; user: string }];
+  comments: { text: string; user: string }[];
   likes: number;
 }
 const statusSchema = new Schema({

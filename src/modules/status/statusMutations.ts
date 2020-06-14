@@ -30,9 +30,10 @@ export const mutations = {
 
       try {
         const savedStatus = await newStatus.save();
-        pubsub.publish(ADD_STATUS, { statusAdded: savedStatus });
         currentUser.statuses = currentUser.statuses.concat(savedStatus.id);
         await currentUser.save();
+
+        pubsub.publish(ADD_STATUS, { newStatus: savedStatus });
       } catch (err) {
         throw new UserInputError(err.message, {
           invalidArgs: args,
@@ -68,7 +69,7 @@ export const mutations = {
         if (currentUser.favorites.includes(statusToLike.id)) {
           const updatedStatus = await Status.findByIdAndUpdate(
             args.id,
-            { stars: statusToLike.likes - 1 },
+            { likes: statusToLike.likes - 1 },
             { new: true }
           );
           pubsub.publish(LIKE_STATUS, { updatedStatus: updatedStatus });
@@ -81,7 +82,7 @@ export const mutations = {
         } else {
           const updatedStatus = await Status.findByIdAndUpdate(
             args.id,
-            { stars: statusToLike.likes + 1 },
+            { likes: statusToLike.likes + 1 },
             { new: true }
           );
           currentUser.favorites = currentUser.favorites.concat(args.id);
@@ -94,7 +95,7 @@ export const mutations = {
         });
       }
     },
-    comment: async (root, args, { currentUser }) => {
+    addComment: async (root, args, { currentUser }) => {
       try {
         const comment = {
           text: args.comment,
@@ -102,13 +103,14 @@ export const mutations = {
         };
 
         const statusToUpdate = await Status.findById(args.id);
+        const comments = statusToUpdate.comments.concat(comment);
 
         const status = await Status.findByIdAndUpdate(
           args.id,
-          { comments: statusToUpdate.comments.concat(comment) },
+          { comments: comments },
           { new: true }
         );
-        pubsub.publish(LIKE_STATUS, { updatedStatus: status });
+        pubsub.publish(LIKE_STATUS, { addComment: status });
         return status;
       } catch (err) {
         throw new UserInputError(err, {
@@ -125,7 +127,7 @@ export const mutations = {
     },
   },
   Subscription: {
-    addStatus: {
+    newStatus: {
       subscribe: () => pubsub.asyncIterator([ADD_STATUS]),
     },
     editStatus: {
@@ -137,7 +139,7 @@ export const mutations = {
     likeStatus: {
       subscribe: () => pubsub.asyncIterator([LIKE_STATUS]),
     },
-    comment: {
+    addComment: {
       subscribe: () => pubsub.asyncIterator([COMMENT]),
     },
   },

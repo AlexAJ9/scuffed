@@ -11,7 +11,6 @@ import { User as UserType } from "./modules/user/types";
 import { queries as userQueries } from "./modules/user/userQueries";
 import { mutations as userMutations } from "./modules/user/userMutations";
 import { Status } from "./modules/status/types";
-import { subscriptions as statusSubscriptions } from "./modules/status/statusSubscriptions";
 import { queries as statusQueries } from "./modules/status/statusQueries";
 import { mutations as statusMutations } from "./modules/status/statusMutations";
 import { Message as MessageType } from "./modules/message/types";
@@ -49,7 +48,7 @@ const server = new ApolloServer({
   resolvers: merge(
     statusQueries,
     statusMutations,
-    statusSubscriptions,
+
     userQueries,
     userMutations,
     messageQueries,

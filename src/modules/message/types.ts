@@ -5,9 +5,9 @@ export const Message = gql`
     id: ID!
     message: String!
     senderUsername: String!
-    receiverUsernmae: String!
-    timestamp: String!
-    user: [String!]
+    receiverUsername: String!
+    timestamp: String
+    user: [User!]
   }
 
   extend type Query {
@@ -15,14 +15,17 @@ export const Message = gql`
   }
 
   extend type Mutation {
-    creatingMessage(username: String!, receiverUsername: String!): Boolean!
     sendMessage(
-      username: String!
-      receiverUsernanem: String!
+      senderUsername: String!
+      receiverUsername: String!
       message: String!
       timestamp: String
     ): Message!
     updateMessage(id: ID!, message: String!): Message!
     deleteMessage(id: String!): Boolean!
+  }
+
+  extend type Subscription {
+    newMessage: Message!
   }
 `;

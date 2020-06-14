@@ -5,14 +5,14 @@ interface Message extends Document {
   message: string;
   senderUsername: string;
   receiverUsername: string;
-  timestamp: number;
+  timestamp: Date;
 }
 
 const messageSchema = new Schema({
   message: { type: String, required: true },
   senderUsername: { type: String, required: true },
   receiverUsername: { type: String, required: true },
-  timestamp: { type: Number }
+  timestamp: { type: Date, default: Date.now },
 });
 
 messageSchema.plugin(uniqueValidator);

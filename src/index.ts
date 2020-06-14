@@ -60,9 +60,8 @@ const server = new ApolloServer({
     if (auth && auth.toLowerCase().startsWith("bearer ")) {
       const decodedToken = jwt.verify(auth.substring(7), process.env.Secret);
       const currentUser = await User.findById(decodedToken.id);
-      return { currentUser, pubsub };
+      return { currentUser };
     }
-    return { pubsub };
   },
 });
 

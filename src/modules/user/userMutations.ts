@@ -1,21 +1,29 @@
+import User from "../../models/User";
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-import User from "../../models/User";
-const { UserInputError, AuthenticationError } = require("apollo-server");
+const {
+  UserInputError,
+  AuthenticationError,
+  PubSub,
+} = require("apollo-server");
+const pubsub = new PubSub();
+
+const EDIT_USER = "EDIT_USER";
+const FRIEND_USER = "FRIEND_USER";
 
 export const mutations = {
   Mutation: {
     addUser: async (root, args) => {
       try {
-        console.log("beh");
         const saltRounds = 10;
         const passwordHash = await bcrypt.hash(args.password, saltRounds);
-        console.log(passwordHash);
+
         const newUser = new User({
           username: args.username,
           passwordHash: passwordHash,
         });
-        console.log(newUser);
+
         await newUser.save();
         return newUser;
       } catch (err) {
@@ -26,7 +34,6 @@ export const mutations = {
     },
     editUser: async (root, args, { currentUser }) => {
       if (!currentUser) {
-        console.log("beh");
         throw new AuthenticationError("bitch");
       }
       const userObj = {
@@ -38,22 +45,29 @@ export const mutations = {
       const usetToEdit = await User.findByIdAndUpdate(args.id, userObj, {
         new: true,
       });
+      pubsub.publish(EDIT_USER, {
+        user: usetToEdit,
+      });
       return usetToEdit;
     },
     friendUser: async (root, args, { currentUser }) => {
-      console.log(args.id);
       if (currentUser.friends.includes(args.id)) {
         currentUser.friends = currentUser.friends.filter((status) => {
           status !== args.id;
         });
 
-        console.log(currentUser.friends + "yes");
         await currentUser.save();
+        pubsub.publish(FRIEND_USER, {
+          user: currentUser,
+        });
         return currentUser;
       } else {
         currentUser.friends = currentUser.friends.concat(args.id);
-        console.log(currentUser.friends + "no");
+
         await currentUser.save();
+        pubsub.publish(FRIEND_USER, {
+          user: currentUser,
+        });
         return currentUser;
       }
     },
@@ -64,7 +78,6 @@ export const mutations = {
           ? false
           : await bcrypt.compare(args.password, user.passwordHash);
       if (!passCorrect) {
-        console.log("he");
         throw new UserInputError({ message: "Wrong password buddeh?" });
       }
       const userToken = {
@@ -73,6 +86,14 @@ export const mutations = {
       };
       const token = await jwt.sign(userToken, process.env.Secret);
       return { token: token, user: user };
+    },
+  },
+  Subscription: {
+    editUser: {
+      subscribe: () => pubsub.asyncIterator([EDIT_USER]),
+    },
+    friendUser: {
+      subscribe: () => pubsub.asyncIterator([FRIEND_USER]),
     },
   },
 };

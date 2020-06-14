@@ -1,29 +1,21 @@
-const { PubSub } = require("apollo-server");
 import Message from "../../models/Message";
 
+const { PubSub } = require("apollo-server");
 const pubsub = new PubSub();
+const NEW_MESSAGE = "NEW_MESSAGE";
 
 export const mutations = {
   Mutation: {
-    creatingMessage: async (root, args) => {
-      pubsub.publish("creatingMessage", {
-        user: args.username,
-        receiver: args.receiverUsername
-      });
-      return true;
-    },
     sendMessage: async (root, args) => {
       const messageObj = new Message({
         message: args.message,
         senderUsername: args.senderUsername,
         receiverUsername: args.receiverUsername,
-        timestamp: args.timestamp
       });
 
       await messageObj.save();
-      pubsub.publish("newMessage", {
+      pubsub.publish(NEW_MESSAGE, {
         newMessage: messageObj,
-        receiverUsername: args.receiverUsername
       });
       return messageObj;
     },
@@ -38,6 +30,11 @@ export const mutations = {
     deleteMessage: async (root, args) => {
       await Message.findOneAndDelete(args.id);
       return true;
-    }
-  }
+    },
+  },
+  Subscription: {
+    newMessage: {
+      subscribe: () => pubsub.asyncIterator([NEW_MESSAGE]),
+    },
+  },
 };

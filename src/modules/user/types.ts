@@ -39,4 +39,8 @@ export const User = gql`
     ): User
     friendUser(id: String!): User
   }
+  extend type Subscription {
+    editUser: [User!]
+    friendUser: [User!]
+  }
 `;

@@ -1,34 +1,11 @@
-const { withFilter, PubSub } = require("apollo-server");
-
+const { PubSub } = require("apollo-server");
 const pubsub = new PubSub();
+const NEW_MESSAGE = "NEW_MESSAGE";
 
 export const subscriptions = {
   Subscription: {
     newMessage: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator("newMessage"),
-        (payload, variables) => {
-          return payload.receiverUsername === variables.receiverUsername;
-        }
-      )
+      subscribe: () => pubsub.asyncIterator([NEW_MESSAGE]),
     },
-    newUser: {
-      subscribe: (_, {}, { pubsub }) => {
-        return pubsub.asyncIterator("newUser");
-      }
-    },
-    oldUser: {
-      subscribe: (_, {}, { pubsub }) => {
-        return pubsub.asyncIterator("oldUser");
-      }
-    },
-    creatingMessage: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator("creatingMessage"),
-        (payload, variables) => {
-          return (payload.receiverUsername = payload.receiverUsername);
-        }
-      )
-    }
-  }
+  },
 };

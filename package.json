@@ -12,22 +12,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/lodash": "^4.14.149",
-    "@types/mongoose": "^5.7.7",
-    "apollo-server": "^2.11.0",
+    "@types/lodash": "^4.14.155",
+    "@types/mongoose": "^5.7.24",
+    "apollo-server": "^2.14.4",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "graphql-yoga": "1.18.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
-    "mongoose": "^5.9.5",
+    "mongoose": "^5.9.18",
     "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {
     "graphql-cli": "2.17.0",
     "npm-run-all": "4.1.5",
     "ts-node": "6.2.0",
-    "ts-node-dev": "^1.0.0-pre.44",
+    "ts-node-dev": "^1.0.0-pre.47",
     "typescript": "2.9.2"
   }
 }

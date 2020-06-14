@@ -35,11 +35,15 @@ export const Status = gql`
       status_tags: [String!]
       status_picture_url: String
     ): Status
-    starStatus(id: String!): Status
+    likeStatus(id: String!): Status
     comment(id: String!, comment: String!): Status
     deleteStatus(id: String): Status
   }
   extend type Subscription {
     addStatus: Status!
+    editStatus: Status!
+    deleteStatus: Status!
+    likeStatus: Status!
+    comment: Status!
   }
 `;

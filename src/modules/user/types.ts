@@ -33,9 +33,9 @@ export const User = gql`
     editUser(
       id: String!
       username: String!
-      name: String!
-      profile_image_url: String!
-      description: String!
+      name: String
+      profile_image_url: String
+      description: String
     ): User
     friendUser(id: String!): User
   }

@@ -2,7 +2,7 @@ const { gql } = require("apollo-server");
 
 export const Status = gql`
   type Status {
-    id: String!
+    id: ID!
     status_text: String!
     created_at: String!
     status_picture_url: String
@@ -43,7 +43,6 @@ export const Status = gql`
     newStatus: Status
     editStatus: Status!
     deleteStatus: Status!
-    likeStatus: Status!
     addComment: Status!
   }
 `;

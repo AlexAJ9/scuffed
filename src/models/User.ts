@@ -2,7 +2,7 @@ import { Schema, model, Document } from "mongoose";
 import * as uniqueValidator from "mongoose-unique-validator";
 
 interface User extends Document {
-  name: string;
+  name?: string;
   username: string;
   passwordHash: string;
   description: string;
@@ -18,8 +18,6 @@ interface User extends Document {
 const userSchema = new Schema({
   name: {
     type: String,
-    unique: true,
-    minLength: 4,
   },
   username: { type: String, required: true, unique: true, minLength: 4 },
   passwordHash: { type: String, required: true },

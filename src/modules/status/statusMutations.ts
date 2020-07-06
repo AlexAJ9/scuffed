@@ -64,7 +64,7 @@ export const mutations = {
       }
     },
     likeStatus: async (root, args, { currentUser }) => {
-      try {
+      try {   
         const statusToLike = await Status.findById(args.id);
         if (currentUser.favorites.includes(statusToLike.id)) {
           const updatedStatus = await Status.findByIdAndUpdate(
@@ -72,10 +72,12 @@ export const mutations = {
             { likes: statusToLike.likes - 1 },
             { new: true }
           );
-          pubsub.publish(LIKE_STATUS, { updatedStatus: updatedStatus });
-          currentUser.favorites = currentUser.favorites.filter((status) => {
-            status !== args.id;
-          });
+
+          // pubsub.publish(LIKE_STATUS, { updatedStatus: updatedStatus });
+          console.log(currentUser.favorites);
+          currentUser.favorites = currentUser.favorites.filter(
+            (x) => x.toString() !== args.id.toString()
+          );
 
           await currentUser.save();
           return updatedStatus;
@@ -135,9 +137,6 @@ export const mutations = {
     },
     deleteStatus: {
       subscribe: () => pubsub.asyncIterator([DELETE_STATUS]),
-    },
-    likeStatus: {
-      subscribe: () => pubsub.asyncIterator([LIKE_STATUS]),
     },
     addComment: {
       subscribe: () => pubsub.asyncIterator([COMMENT]),
